@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Tic Tac Toe - Final Version</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-image: url('https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd2Q2YTY1M3J1OGtpeGpxY2FxOHc3MHUycm5ldzAxcm1pMWo3N3dreCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/V4NSR1NG2p0KeJJyr5/giphy.gif');
+      background-repeat: no-repeat;
+      background-size: 150%;
+    }
+
+    h1,
+    .btn,
+    .status {
+      border-radius: 5px;
+      font-style: italic;
+      color: black;
+      padding: 5px 10px;
+      font-size: 40px;
+      background: linear-gradient(270deg,
+          #aaff00,
+          #99ff00,
+          #00ff40,
+          #22ff00);
+      background-size: 600% 600%;
+      animation: gradientMove 8s ease infinite;
+    }
+
+    @keyframes gradientMove {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    #board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+      margin-top: 20px;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      background: #7b9808;
+      border: 1px solid #ffff;
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .cell:hover {
+      opacity: 0.5;
+    }
+
+    /* markers */
+    .x-player {
+      color: #ff4d4d;
+    }
+
+    .o-player {
+      color: #4db8ff;
+    }
+
+    .btn {
+      margin-top: 25px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 20px;
+      transition: all ease 0.5s;
+      border: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-4px);
+    }
+
+    .status {
+      margin-top: 15px;
+      font-size: 20px;
+    }
+
+    .win {
+      background-color: #2d5a27 !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Tic Tac Toe</h1>
+
+  <div id="status" class="status">Player X's Turn</div>
+
+  <div id="board">
+    <div class="cell" onclick="move(this, 0)"></div>
+    <div class="cell" onclick="move(this, 1)"></div>
+    <div class="cell" onclick="move(this, 2)"></div>
+    <div class="cell" onclick="move(this, 3)"></div>
+    <div class="cell" onclick="move(this, 4)"></div>
+    <div class="cell" onclick="move(this, 5)"></div>
+    <div class="cell" onclick="move(this, 6)"></div>
+    <div class="cell" onclick="move(this, 7)"></div>
+    <div class="cell" onclick="move(this, 8)"></div>
+  </div>
+
+  <button class="btn" onclick="reset()">Reset Game</button>
+
+  <script>
+    var turn = 'X';
+    var board = ['', '', '', '', '', '', '', '', ''];
+    var active = true;
+
+    function move(el, idx) {
+      if (board[idx] != '' || !active) return;
+
+      board[idx] = turn;
+      el.innerText = turn;
+      el.classList.add(turn == 'X' ? 'x-player' : 'o-player');
+
+      if (checkWin()) {
+        document.getElementById('status').innerText = 'Player ' + turn + ' Wins!';
+        active = false;
+        return;
+      }
+
+      if (!board.includes('')) {
+        document.getElementById('status').innerText = 'Draw!';
+        return;
+      }
+
+
+      turn = (turn == 'X') ? 'O' : 'X';
+      document.getElementById('status').innerText = "Player " + turn + "'s Turn";
+    }
+
+    function checkWin() {
+      const wins = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8],
+        [0, 3, 6], [1, 4, 7], [2, 5, 8],
+        [0, 4, 8], [2, 4, 6]
+      ];
+
+      for (let i = 0; i < wins.length; i++) {
+        const [a, b, c] = wins[i];
+        if (board[a] && board[a] == board[b] && board[a] == board[c]) {
+          // highlight win
+          const cells = document.getElementsByClassName('cell');
+          cells[a].classList.add('win');
+          cells[b].classList.add('win');
+          cells[c].classList.add('win');
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function reset() {
+      board = ['', '', '', '', '', '', '', '', ''];
+      turn = 'X';
+      active = true;
+      document.getElementById('status').innerText = "Player X's Turn";
+
+      var cells = document.getElementsByClassName('cell');
+      for (var i = 0; i < cells.length; i++) {
+        cells[i].innerText = '';
+        cells[i].classList.remove('x-player', 'o-player', 'win');
+      }
+    }
+  </script>
+</body>
+
+</html>
